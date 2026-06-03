@@ -249,3 +249,39 @@ modelo_gwr <- gwr(indice_alquiler ~ turismo_total, data = mapa_sp, coords = coor
 print("--- MODELO GWR ---")
 print(modelo_gwr)
 
+
+
+
+##
+library(tmap)
+tmap_mode("plot")
+
+# Mapa 1: Impacto Local
+mapa_gwr_coef <- tm_shape(mapa_peninsula) +
+  tm_polygons(fill = "coef_turismo_local", 
+              fill.scale = tm_scale_intervals(style = "quantile", n = 5, values = "YlOrRd"),
+              fill.legend = tm_legend(title = "Coef. Local"),
+              col = "black", lwd = 0.3) +
+  tm_title("GWR: Impacto Local", size = 0.9) +
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "bottom",
+            frame = FALSE)                          
+
+# Mapa 2: Capacidad Explicativa
+mapa_gwr_r2 <- tm_shape(mapa_peninsula) +
+  tm_polygons(fill = "r2_local", 
+              fill.scale = tm_scale_intervals(style = "pretty", values = "Blues"),
+              fill.legend = tm_legend(title = "R-cuadrado"),
+              col = "black", lwd = 0.3) +
+  tm_title("GWR: Capacidad Explicativa", size = 0.9) +
+  tm_layout(legend.outside = TRUE,
+            legend.outside.position = "bottom",
+            frame = FALSE)
+
+# Juntamos los mapas
+mapas_juntos <- tmap_arrange(mapa_gwr_coef, mapa_gwr_r2, ncol = 2)
+
+# Exportar directamente al archivo grande (14x7 pulgadas)
+#tmap_save(mapas_juntos, filename = "mapa_GWR_definitivo.png", width = 14, height = 7, units = "in", dpi = 300)
+
+
